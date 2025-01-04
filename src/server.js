@@ -111,6 +111,4 @@ process.on('unhandledRejection', (err) => {
   process.exit(1);
 });
 
-module.exports = (req, res) => {
-  app(req, res); // Pass requests directly to the Express app
-};
+module.exports = { app, io };
