@@ -36,8 +36,8 @@ app.use('/api/auth', authRoutes);
 
 // Database connection
 const mongooseOptions = {
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
+  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+  socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
 };
 
 mongoose.connect(process.env.MONGODB_URI, mongooseOptions)
@@ -57,12 +57,10 @@ mongoose.connection.on('disconnected', () => {
   console.log('MongoDB disconnected');
 });
 
-// Socket.IO connection handler
-
-
+// Root route
 app.get("/", (req, res) => res.send("Express with Socket.IO"));
 
-// Error handlers
+// Basic error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(err.status || 500).json({
@@ -71,6 +69,7 @@ app.use((err, req, res, next) => {
   });
 });
 
+// 404 handler for undefined routes
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -93,8 +92,5 @@ process.on('unhandledRejection', (err) => {
   process.exit(1);
 });
 
-// Export the app or server as the default export
-module.exports = app; // or module.exports = server;
-
-// Export io as a named export (if needed)
-module.exports.io = io;
+// Export the app directly
+module.exports = app;
